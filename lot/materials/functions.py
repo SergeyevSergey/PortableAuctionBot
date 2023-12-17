@@ -23,19 +23,19 @@ def create_user(update):
 
 # Find minimal bid
 def find_min_bid(lot):
-    start_price = lot.start_price
-    if 0 < start_price < 500000:
-        minimal_bid = (lot.start_price/100)*15
-    elif 500000 <= start_price < 1000000:
-        minimal_bid = (lot.start_price/100)*10
-    elif 1000000 <= start_price < 10000000:
-        minimal_bid = (lot.start_price/100)*6
-    elif 10000000 <= start_price < 25000000:
-        minimal_bid = (lot.start_price/100)*3
-    elif 25000000 <= start_price < 100000000:
-        minimal_bid = (lot.start_price/100)*1.5
+    price = lot.current_price
+    if 0 < price < 500000:
+        minimal_bid = (price/100)*15
+    elif 500000 <= price < 1000000:
+        minimal_bid = (price/100)*10
+    elif 1000000 <= price < 10000000:
+        minimal_bid = (price/100)*6
+    elif 10000000 <= price < 25000000:
+        minimal_bid = (price/100)*3
+    elif 25000000 <= price < 100000000:
+        minimal_bid = (price/100)*1.5
     else:
-        minimal_bid = (lot.start_price/100)
+        minimal_bid = (price/100)
 
     return round(minimal_bid, 2)
 

@@ -157,33 +157,21 @@ class Command(BaseCommand):
         def make_bid_button(update, context):
             query = update.callback_query
             if query.data[:8] == 'make_bid':
-                print('starting bid')
 
                 # logics
                 query.answer()
 
                 pk = int(query.data[9:])
                 lot = Lot.objects.filter(pk=pk).first()
-                print('lot found:', lot)
                 create_user(update)
-                print('user created')
 
                 if lot:
-                    print('lot exists')
                     if lot.current_applicant != str(update.effective_user.username):
-                        print('not applicant')
                         minimal_bid = find_min_bid(lot)
-                        print('min bid', minimal_bid)
                         user = CustomUser.objects.get(user_id=update.effective_user.id)
-                        print('user', user)
                         previous_bid = UserBid.objects.filter(user=user, lot=lot).first()
-                        print('prev bid', previous_bid)
                         if previous_bid:
                             previous_bid.delete()
-                        print('prev bid deleted')
-                        print(CustomUser.objects.get(user_id=update.effective_user.id))
-                        print(lot)
-                        print(minimal_bid)
 
                         # UserBid saving
                         new_user_bid = UserBid(
@@ -191,16 +179,13 @@ class Command(BaseCommand):
                             lot=lot,
                             bid_cost=minimal_bid+lot.current_price
                         )
-                        print('new user bid created')
                         new_user_bid.save()
-                        print('new user bid saved')
 
                         # Lot changing
                         lot.current_price += minimal_bid
                         lot.current_applicant = update.effective_user.username
                         lot.bidders.add(CustomUser.objects.get(user_id=update.effective_user.id))
                         lot.save()
-                        print('lot saved')
                         send_success_bid(update, context)
                     else:
                         send_fail_bid(update, context)
