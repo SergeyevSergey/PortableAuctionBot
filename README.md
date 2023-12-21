@@ -1,6 +1,6 @@
 <h2>Important</h2>
 
-This telegram bot is written on python 3 using Django framework. This is important to <strong>use python 3</strong> and <strong>install requirements</strong>. If you will not follow instructions it may cause an errors.<br>Database located in db.sqlite3 file of project folder.<br>Main script file of the bot is in "your project/lot/management/commands/bot.py"
+This telegram bot is written on python 3 using Django framework. This is important to <strong>use python 3</strong> and <strong>install requirements</strong>. If you will not follow instructions it may cause an errors.<br>Database located in db.sqlite3 file of project folder.<br>Main script file of the bot is in "your project/lot/management/commands/bot.py"<br><strong>Logs features:<br>- (function started)<br>-- (button pressed)<br>-H- (handler strarted)<br>'empty space' (logs inside function)<br>
 
 <h2>Downloading</h2>
 
