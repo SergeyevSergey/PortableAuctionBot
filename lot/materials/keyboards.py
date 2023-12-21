@@ -13,12 +13,16 @@ menu_keyboard = [
 
 # Lot keyboard
 def set_lot_keyboard(update, lot):
+    print('- set_lot_keyboard function activated')
     if lot.user_id == update.effective_user.username:
         keyboard = [[InlineKeyboardButton("❌ Delete", callback_data=f'delete_lot_{lot.pk}')]]
+        print('     set delete button')
     else:
         if lot.current_applicant != update.effective_user.username:
             keyboard = [[InlineKeyboardButton(f"💸 Make a bid:    +{find_min_bid(lot)} UZS", callback_data=f'make_bid_{lot.pk}')]]
+            print('     set bid button')
         else:
             keyboard = [[InlineKeyboardButton(f"🔄 Refresh", callback_data=f'refresh_{lot.pk}')]]
+            print('     set refresh button')
 
     return keyboard

@@ -4,13 +4,17 @@ from django.core.files.storage import default_storage
 # -- Warnings
 
 def send_expiration_message(update, lot):
+    print('- send_expiration_message function activated')
     if lot.current_applicant != 'None':
+        print('     lot.current_applicant exists')
         update.message.reply_text(f"❗️Attention❗\n\nYour lot {lot.description} has been expired!\n\nThe buyer is: @{lot.current_applicant}\nCurrent price: {lot.current_price} UZS\n\nPlease, contact your buyer to make a deal.")
     else:
+        print('     lot.current_applicant not exists')
         update.message.reply_text(f"❗️Attention❗\n\nYour lot {lot.description} has been expired!\n\nUnfortunately, nobody made any bids for this lot.")
 
 
 def send_purchase_message(context, username, lot):
+    print('- send_purchase_message function activated')
     context.bot.send_message(
         chat_id=username,
         text=f"❗️Attention❗\n\nyou are the winner of the {lot.description} auction with your bid!\n\nLot keeper: @{lot.user_id}\nCurrent price: {lot.current_price} UZS\n\nPlease, contact your lot keeper to make a purchase."
@@ -40,7 +44,7 @@ def send_price_message(update):
 
 def send_price_error_message(update):
     update.message.reply_text(
-        "Please, enter number greater than zero."
+        "Please, enter number greater than zero and less than 1 billion UZS."
     )
 
 
@@ -97,7 +101,6 @@ def send_menu(update, reply_markup):
 
 # /help command
 def send_help(update):
-    print('send help started')
     update.message.reply_text("I'm here to help you!\n\n/start - Start bot\n/menu - Open the menu\n/cancel - Cancel current operation")
 
 
@@ -177,23 +180,31 @@ def send_fail_bid(update, context):
 
 # Print lot
 def print_lot(update, context, lot, reply_markup, bid=None):
-    if default_storage.exists(lot.image_url):
+    print('- print-lot function activated')
+    try:
+        default_storage.exists(lot.image_url)
+        print('     lot.image exists')
         if bid is None:
+            print('     set no bid description')
             caption = f'Description:\n{lot.description}\n\nStart price: {lot.start_price} UZS\nCurrent price: {lot.current_price} UZS\nCurrent applicant: @{lot.current_applicant}\n\nLot created by: @{lot.user_id}'
         else:
+            print('     set bid description')
             if lot.current_applicant != update.effective_user.username:
+                print('     lot.user_id != update.effective_user.id')
                 caption = f'Description:\n{lot.description}\n\nStart price: {lot.start_price} UZS\nCurrent price: {lot.current_price} UZS\nCurrent applicant: @{lot.current_applicant}\n\nYour bid was: {bid.bid_cost} UZS\n\nLot created by: @{lot.user_id}'
             else:
+                print('     lot.user_id == update.effective_user.id')
                 caption = f'Description:\n{lot.description}\n\nStart price: {lot.start_price} UZS\nCurrent price: {lot.current_price} UZS\nCurrent applicant: @{lot.current_applicant}\n\nLot created by: @{lot.user_id}'
-
         context.bot.send_photo(
             chat_id=update.effective_chat.id,
             photo=open(lot.image_url, 'rb'),
             caption=caption,
             reply_markup=reply_markup
         )
-    else:
-        update.message.reply_text(
-            "Error 404. Lot not found!"
+    except:
+        print('     lot.image not exists')
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Error 404. Lot image not found!"
         )
 
